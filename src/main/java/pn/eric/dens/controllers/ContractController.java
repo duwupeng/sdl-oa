@@ -62,6 +62,8 @@ public class ContractController {
         File[]   files = dir.listFiles();
         List<String> fileNames = Arrays.stream(files).map(file -> file.getName()).collect(Collectors.toList());
         model.addAttribute("contracts", fileNames);
+        model.addAttribute("category", category);
+
         return "contracts";
     }
     /**

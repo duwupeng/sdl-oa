@@ -70,19 +70,19 @@ public class ContractController {
      * 附件下载
      * @param contractId
      * @param fileName
-     * @param fileType
      * @throws Exception
      */
-    @RequestMapping(value = "/contract/download/{contractId}/{fileName}/{fileType}",method = RequestMethod.GET)
+    @RequestMapping(value = "/contract/download/{contractId}/{fileName}",method = RequestMethod.GET)
     public void attachmentDownload(HttpServletResponse res,
                                               @PathVariable int contractId,
-                                              @PathVariable String fileName,
-                                              @PathVariable String fileType) throws Exception {
+                                              @PathVariable String fileName) throws Exception {
         res.setHeader("content-type", "application/octet-stream");
         res.setContentType("application/octet-stream");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName + "." + fileType);
+        res.setHeader("Content-Disposition", "attachment;filename=" + fileName+".doc" );
 
-        File file = new File(attachmentPath+ File.separator + fileName+ "." +fileType);
+        File file = new File(attachmentPath+ File.separator +"sdl_docs"+ File.separator
+                +fileMaps.get(contractId)
+                +File.separator+ fileName+".doc" );
         InputStream reader = null;
         OutputStream out = null;
         byte[] bytes = new byte[1024];

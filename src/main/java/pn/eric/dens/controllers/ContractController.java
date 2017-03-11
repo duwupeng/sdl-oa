@@ -3,6 +3,7 @@ package pn.eric.dens.controllers;
 import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,12 +14,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.List;
 
 @Controller
 public class ContractController {
 
     @Value("${file.attachmentPath}")
     String attachmentPath;
+
+    @RequestMapping("contract/{category}")
+    public List<String> showProduct(@PathVariable String category){
+
+        return null;
+    }
     /**
      * 附件下载
      * @param contractId

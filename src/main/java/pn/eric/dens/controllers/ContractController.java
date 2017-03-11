@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -75,39 +72,38 @@ public class ContractController {
     @RequestMapping(value = "/contract/download/{contractId}/{fileName}",method = RequestMethod.GET)
     public void attachmentDownload(HttpServletResponse res,
                                               @PathVariable int contractId,
-                                              @PathVariable String fileName) throws Exception {
+                                              @PathVariable String fileName) {
         res.setHeader("content-type", "application/octet-stream");
         res.setContentType("application/octet-stream");
-        res.setHeader("Content-Disposition", "attachment;filename=" + fileName+".doc" );
-
-        File file = new File(attachmentPath+ File.separator +"sdl_docs"+ File.separator
-                +fileMaps.get(contractId)
-                +File.separator+ fileName+".doc" );
-        InputStream reader = null;
-        OutputStream out = null;
-        byte[] bytes = new byte[1024];
-        int len = 0;
         try {
-            // 读取文件
-            reader = new FileInputStream(file);
-            // 写入浏览器的输出流
-            out = res.getOutputStream();
+            res.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName,"UTF-8")+".doc" );
 
-            while ((len = reader.read(bytes)) > 0) {
-                out.write(bytes, 0, len);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
+            File file = new File(attachmentPath+ File.separator +"sdl_docs"+ File.separator
+                    +fileMaps.get(contractId)
+                    +File.separator+ fileName+".doc" );
+            OutputStream os = null;
+
+                os = res.getOutputStream();
+
+                BufferedOutputStream bos = new BufferedOutputStream(os);
+
+                InputStream is = null;
+
+                is = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(is);
+
+                int length = 0;
+                byte[] temp = new byte[1 * 1024 * 10];
+
+                while ((length = bis.read(temp)) != -1) {
+                    bos.write(temp, 0, length);
                 }
-                if (out != null)
-                    out.close();
-            } catch (Exception t) {
-                t.printStackTrace();
-            }
+                bos.flush();
+                bis.close();
+                bos.close();
+                is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
